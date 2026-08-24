@@ -9,9 +9,9 @@ pipeline{
         stage("READ VERSION"){
             steps{
                 script{
-                    def app_verion = sh (script: 'cut -d "=" -f 2  setup.cfg',returnStdout: true).trim()
+                    def app_version = sh (script: 'cut -d "=" -f 2  setup.cfg',returnStdout: true).trim()
                     echo "Extraced appverion value: ${app_version}"
-                    env.APP_VERSION=app_version
+                    env.APP_VERSION=${app_version}
                 }
                
             }
