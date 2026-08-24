@@ -30,7 +30,7 @@ pipeline{
         stage("PUSH IMAGE"){
             steps{
                 echo "Push frontend Image"
-                withCrendentials([usernamePassword(credentialsId: 'dockerhub-tocken',usernameVariable: 'DOCKER_USER',
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-tocken',usernameVariable: 'DOCKER_USER',
                                 passwordVariable: 'DOCKER_PASS')]){
                                         sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                                 }
