@@ -6,7 +6,10 @@ pipeline{
     }
     stages{
         stage("BUILD IMAGE"){
-            echo "Buildig Image"
+            step{
+                echo "Buildig Image"
+                
+            }
         }
     }
 }
