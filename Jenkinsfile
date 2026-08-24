@@ -1,9 +1,7 @@
 pipeline{
     agent{
         node{
-            label {
-                186.3
-            }
+            label   '186.3'
         }
     }
     stages{
