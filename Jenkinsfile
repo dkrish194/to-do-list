@@ -37,18 +37,24 @@ pipeline{
             }
         }
         stage("DOCKER PUSH BACKEND"){
-            echo "Docker Push Backend"
-            withCredentials([usernamePassword(credentialsId: 'dockerhub-tocken',usernameVariable: 'DOCKER_USER',
+            steps{
+                 echo "Docker Push Backend"
+                 withCredentials([usernamePassword(credentialsId: 'dockerhub-tocken',usernameVariable: 'DOCKER_USER',
                                 passwordVariable: 'DOCKER_PASS')]){
                                         sh 'docker push dkrish194/to-do-list-backend:${env.APP_VERSION}'
                                 }
+            }
+           
         }
           stage("DOCKER PUSH FRONTEND"){
-            echo "Docker Push Frontend"
+            steps{
+                 echo "Docker Push Frontend"
             withCredentials([usernamePassword(credentialsId: 'dockerhub-tocken',usernameVariable: 'DOCKER_USER',
                                 passwordVariable: 'DOCKER_PASS')]){
                                         sh 'docker push dkrish194/to-do-list-frontend:latest'
                                 }
+            }
+           
         }
       
     }
