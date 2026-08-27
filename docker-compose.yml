@@ -1,6 +1,25 @@
 version: "3.8"
 
 services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass123
+      MYSQL_DATABASE: tododb
+      MYSQL_USER: todo
+      MYSQL_PASSWORD: todopass
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/custom.cnf:/etc/mysql/conf.d/custom.cnf
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpass123"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     build: ./backend
     ports:
@@ -10,15 +29,30 @@ services:
       APP_COLOR: "#4F46E5"
       APP_COLOR_NAME: indigo
       CORS_ORIGIN: "*"
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_USER: todo
+      DB_PASSWORD: todopass
+      DB_NAME: tododb
+    depends_on:
+      - mysql   # note: backend's own retry logic means it doesn't NEED
+                # mysql to be ready first - this just controls start order
 
   frontend:
     build: ./frontend
     ports:
-      - "8080:8080"
+      - "8082:8081"
     environment:
-      BACKEND_URL: http://localhost:5000
+      # nginx proxies /api and /version to this internally now - "backend"
+      # is docker-compose's own DNS name for the backend service, reachable
+      # only within the compose network, never exposed to your browser.
+      BACKEND_PROXY_HOST: backend:5000
       FRONTEND_VERSION: v1.0.0
       FRONTEND_COLOR: "#4F46E5"
       FRONTEND_COLOR_NAME: indigo
+      NGINX_PORT: "8081"
     depends_on:
       - backend
+
+volumes:
+  mysql-data:

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-app-nginx
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          # Only ONE rule - frontend's nginx reverse-proxies /api and
+          # /version to the backend internally. Backend Service stays
+          # ClusterIP-only, no Ingress rule of its own needed.
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-frontend
+                port:
+                  number: 80

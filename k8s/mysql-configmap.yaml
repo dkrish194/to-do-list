@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS tododb;
+  custom.cnf: |
+    [mysqld]
+    slow_query_log = 1
+    slow_query_log_file = /var/log/mysql/slow.log
+    long_query_time = 1
+    general_log = 0
+    general_log_file = /var/log/mysql/general.log
+    log_error = /var/log/mysql/error.log

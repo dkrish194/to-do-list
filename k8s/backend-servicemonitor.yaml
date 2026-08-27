@@ -1,5 +1,5 @@
 # Adjust `release: kube-prometheus-stack` (both here and on the Service label)
-# to whatever value your Prometheus CR's serviceMonitorSelector expects.
+# to match whatever value your Prometheus CR's serviceMonitorSelector expects.
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:

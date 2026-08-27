@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo App</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="banner" class="banner">
+  <div class="banner-inner">
+    <span class="badge" id="version-badge">VERSION ...</span>
+    <span class="badge" id="color-badge">COLOR ...</span>
+    <span class="badge" id="pod-badge">POD ...</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <h1>📝 Todo List</h1>
+
+  <form id="todo-form" class="todo-form">
+    <input type="text" id="new-title" placeholder="Add a new task..." autocomplete="off" required>
+    <button type="submit">Add</button>
+  </form>
+
+  <div id="status-msg" class="status-msg"></div>
+
+  <ul id="todo-list" class="todo-list"></ul>
+
+  <div class="stats" id="stats"></div>
+
+  <details class="practice-panel">
+    <summary>⚙️ Grafana / Prometheus practice panel</summary>
+    <p>Fire test traffic against the backend without leaving the UI.</p>
+    <div class="btn-row">
+      <button data-action="status" data-code="400">Trigger 400</button>
+      <button data-action="status" data-code="404">Trigger 404</button>
+      <button data-action="status" data-code="429">Trigger 429</button>
+      <button data-action="status" data-code="500">Trigger 500</button>
+      <button data-action="status" data-code="503">Trigger 503</button>
+      <button data-action="error">Trigger real exception (500)</button>
+      <button data-action="slow" data-delay="3">Slow request (3s)</button>
+      <button data-action="slow" data-delay="8">Slow request (8s)</button>
+      <button data-action="burst">Burst 50 mixed requests</button>
+    </div>
+    <pre id="practice-log" class="practice-log"></pre>
+  </details>
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

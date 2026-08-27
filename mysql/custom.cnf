@@ -1,0 +1,14 @@
+[mysqld]
+# Send logs to files that we tail to stdout via a sidecar-free approach:
+# the k8s Deployment mounts an emptyDir and runs a `tail -f` sidecar
+# container that ships these to stdout for Filebeat/Fluent-bit to pick up.
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/slow.log
+long_query_time = 1
+
+general_log = 0
+# Flip to 1 temporarily if you want to see EVERY query for ELK practice -
+# very noisy in real use, but great for a first look at what MySQL logs.
+general_log_file = /var/log/mysql/general.log
+
+log_error = /var/log/mysql/error.log

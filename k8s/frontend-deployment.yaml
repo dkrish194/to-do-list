@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-frontend
+  labels:
+    app: todo-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-frontend
+  template:
+    metadata:
+      labels:
+        app: todo-frontend
+    spec:
+      containers:
+        - name: todo-frontend
+          image: dkrish194/todo-frontend:v2.0.2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: FRONTEND_VERSION
+              value: "v1.0.0"
+            - name: FRONTEND_COLOR
+              value: "#4F46E5"
+            - name: FRONTEND_COLOR_NAME
+              value: "indigo"
+            - name: NGINX_PORT
+              value: "8081"
+            # nginx (inside this pod) proxies /api and /version to this
+            # internally - "todo-backend" is the backend Service's DNS name,
+            # resolvable via cluster DNS only. The backend Service can stay
+            # ClusterIP forever; the browser never talks to it directly.
+            - name: BACKEND_PROXY_HOST
+              value: "todo-backend"
+          readinessProbe:
+            httpGet: { path: /healthz, port: 8081 }
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8081 }
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          resources:
+            requests: { cpu: "50m", memory: "64Mi" }
+            limits: { cpu: "200m", memory: "128Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-frontend
+  labels:
+    app: todo-frontend
+spec:
+  selector:
+    app: todo-frontend
+  ports:
+    - port: 80
+      targetPort: 8081
+  type: ClusterIP

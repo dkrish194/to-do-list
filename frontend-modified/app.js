@@ -1,5 +1,6 @@
 const CFG = window.APP_CONFIG || {};
-const API = (CFG.BACKEND_URL || "http://localhost:5000").replace(/\/$/, "");
+//const API = "/api";   // same-origin, relative - nginx reverse-proxies this to the backend internally
+const API = "";   // same-origin, relative - nginx reverse-proxies /api and /version internally
 
 const listEl = document.getElementById("todo-list");
 const formEl = document.getElementById("todo-form");
@@ -15,7 +16,7 @@ document.getElementById("color-badge").textContent = `COLOR ${CFG.FRONTEND_COLOR
 
 async function loadBackendVersion() {
   try {
-    const res = await fetch(`${API}/version`);
+    const res = await fetch(`/version`);
     const data = await res.json();
     document.getElementById("pod-badge").textContent = `BACKEND ${data.version} / ${data.pod}`;
   } catch (e) {

@@ -1,0 +1,44 @@
+# --- For EKS with AWS Load Balancer Controller ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-app-alb
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+    - http:
+        paths:
+          # Only ONE rule needed now - the frontend's own nginx reverse-
+          # proxies /api and /version to the backend internally. The
+          # backend Service never needs an Ingress rule of its own and
+          # can stay ClusterIP-only.
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: todo-frontend
+                port:
+                  number: 80
+---
+# --- For k3d / any cluster running the nginx ingress controller ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: todo-app-nginx
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#     - http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: todo-frontend
+#                 port:
+#                   number: 80
