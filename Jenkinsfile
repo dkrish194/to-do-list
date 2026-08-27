@@ -30,13 +30,13 @@ pipeline{
         stage("BUILD FRONTEND IMAGE"){
             steps{
                 echo "Building frontend Image"
-                sh "docker build -t dkrish194/todo-frontend:${env.FE_APP_VERSION} frontend/Dockerfile"
+                sh "docker build -t dkrish194/todo-frontend:${env.FE_APP_VERSION} frontend"
             }
         }
         stage("BUILD BACKEND IMAGE"){
             steps{
                 echo "Buildig Backend Image"
-                sh "docker build -t dkrish194/todo-backend:${env.BE_APP_VERSION} backend/Dockerfile"
+                sh "docker build -t dkrish194/todo-backend:${env.BE_APP_VERSION} backend"
             }
         }
 
