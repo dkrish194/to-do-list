@@ -55,7 +55,7 @@ pipeline{
                  echo "Docker Push Frontend"
             withCredentials([usernamePassword(credentialsId: 'dockerhub-tocken',usernameVariable: 'DOCKER_USER',
                                 passwordVariable: 'DOCKER_PASS')]){
-                                        sh 'docker push dkrish194/todo-frontend:${env.FE_APP_VERSION}'
+                                        sh "docker push dkrish194/todo-frontend:${env.FE_APP_VERSION}"
                                 }
             }
            
