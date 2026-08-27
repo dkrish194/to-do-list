@@ -21,7 +21,7 @@ pipeline{
         stage("READ BACKEND VERSION"){
             steps{
                 script{
-                    def fe_app_version = sh (script: 'cut -d "=" -f 2  backend/setup-backend.cfg',returnStdout: true).trim()
+                    def be_app_version = sh (script: 'cut -d "=" -f 2  backend/setup-backend.cfg',returnStdout: true).trim()
                     echo "Extraced backend appverion value: ${be_app_version}"
                     env.BE_APP_VERSION=be_app_version
                 }
