@@ -70,6 +70,22 @@ pipeline{
             }
            
         }
+        post {
+            success {
+                slackSend(
+                    channel: '#channel-jenkins',
+                    color: 'good',
+                    message: "✅ SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
+                )
+            }
+            failure {
+                slackSend(
+                    channel: '#channel-jenkins',
+                    color: 'danger',
+                    message: "❌ FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
+                )
+            }
+        }
         
       
     }
