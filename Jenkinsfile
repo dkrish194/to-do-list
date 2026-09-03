@@ -98,14 +98,14 @@ pipeline{
         stage('Update BE image tag with yq'){
             steps{
                 sh """
-                    yq eval '.image.tag = "${env.BE_APP_VERSION}"' -i helm-be/values.yaml
+                    yq eval '.image.tag = "${env.BE_APP_VERSION}"' -i ${WORKSPACE}/gitops/helm-be/values.yaml
                 """
             }
         }
         stage('Update EE image tag with yq'){
             steps{
                 sh """
-                    yq eval '.image.tag = "${env.FE_APP_VERSION}"' -i helm-fe/values.yaml
+                    yq eval '.image.tag = "${env.FE_APP_VERSION}"' -i ${WORKSPACE}/gitops/helm-fe/values.yaml
                 """
             }
         }
