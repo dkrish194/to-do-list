@@ -4,6 +4,12 @@ pipeline{
             label   '186.3'
         }
     }
+    environment {
+        GITOPS_REPO   = 'https://github.com/dkrish194/to-do-list-k8-helm.git'
+        GITOPS_BRANCH = 'main'
+        HELM_VALUES   = 'helm-be/values.yaml'   // path inside gitops repo
+        IMAGE_TAG     = "${env.BUILD_NUMBER}-${env.GIT_COMMIT?.take(7)}"
+    }
     stages{
 
         stage("READ FRONTEND VERSION"){
@@ -70,7 +76,69 @@ pipeline{
             }
            
         }
+        stage('CLONE GIT-OPS REPO'){
+            steps{
+                script{
+                    dir('gitops') {
+                        withCredentials([usernamePassword(
+                            credentialsId: 'dockerhub-tocken',
+                            usernameVariable: 'GIT_USER',
+                            passwordVariable: 'GIT_TOKEN'
+                        )]) {
+                            sh '''
+                                git clone --depth 1 --single-branch \
+                                    --branch ${GITOPS_BRANCH} \
+                                    https://github.com/dkrish194/to-do-list-k8-helm.git .
+                            '''
+                        }
+                } 
+                }
+            }
+        }
+        stage('Update BE image tag with yq'){
+            steps{
+                sh """
+                    yq eval '.image.tag = "${env.BE_APP_VERSION}"' -i helm-be/values.yaml
+                """
+            }
+        }
+        stage('Update EE image tag with yq'){
+            steps{
+                sh """
+                    yq eval '.image.tag = "${env.FE_APP_VERSION}"' -i helm-fe/values.yaml
+                """
+            }
+        }
 
+        stage('Commit and Push') {
+            steps {
+                dir('gitops') {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-tocken',
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_TOKEN'
+                    )]) {
+                        sh '''
+                            git config user.email "dkrish194@github.com"
+                            git config user.name "dkrish194"
+                            git add helm-be/values.yaml
+                            git add helm-fe/values.yaml
+
+                            git commit -m "chore: bump image tag to ${IMAGE_TAG} [skip ci]"
+
+                            // # retry with rebase in case another pipeline pushed in the meantime
+                             for i in 1 2 3; do
+                                git pull --rebase origin ${GITOPS_BRANCH} && \
+                                git push https://${GIT_USER}:${GIT_TOKEN}@github.com/dkrish194/to-do-list-k8-helm.git HEAD:${GITOPS_BRANCH} && break
+                                sleep 3
+                             done
+
+                            
+                        '''
+                    }
+                }
+            }
+        }
         
       
     }

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"nginx.org/ssl-redirect":"false"},"name":"todo-ingress","namespace":"default"},"spec":{"ingressClassName":"nginx","rules":[{"host":"todo-list.labserver","http":{"paths":[{"backend":{"service":{"name":"todo-frontend","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}]}}
+    nginx.org/ssl-redirect: "false"
+  creationTimestamp: "2026-08-26T14:03:33Z"
+  generation: 3
+  name: todo-ingress
+  namespace: default
+  resourceVersion: "55914"
+  uid: 64b74677-ab51-4f0f-b5c0-a8bb0a42556f
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: todo-list.labserver
+    http:
+      paths:
+      - backend:
+          service:
+            name: todo-frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+    - ip: 172.18.0.2
