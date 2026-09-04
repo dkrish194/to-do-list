@@ -114,7 +114,7 @@ pipeline{
             steps {
                 dir('gitops') {
                     withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub-tocken',
+                        credentialsId: 'github-token',
                         usernameVariable: 'GIT_USER',
                         passwordVariable: 'GIT_TOKEN'
                     )]) {
