@@ -126,7 +126,7 @@ pipeline{
 
                             git commit -m "chore: bump image tag to ${IMAGE_TAG} [skip ci]"
 
-                            // # retry with rebase in case another pipeline pushed in the meantime
+                            # retry with rebase in case another pipeline pushed in the meantime
                              for i in 1 2 3; do
                                 git pull --rebase origin ${GITOPS_BRANCH} && \
                                 git push https://${GIT_USER}:${GIT_TOKEN}@github.com/dkrish194/to-do-list-k8-helm.git HEAD:${GITOPS_BRANCH} && break
