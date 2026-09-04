@@ -158,5 +158,10 @@ pipeline{
                 message: "❌ FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}\n${env.BUILD_URL}"
             )
         }
+        always{
+   
+            echo 'inside post always section'
+            cleanWs()
+        }
 }
 }
